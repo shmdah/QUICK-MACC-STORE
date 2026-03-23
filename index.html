@@ -197,7 +197,7 @@
 
     <div class="promo-banner">
         <div class="promo-marquee">
-            USE CODE <span class="text-brand-500 font-black px-1 tracking-wider text-xs">4MACC</span> FOR A DISCOUNT AND A CUSTOM BOX!
+            USE CODE <span class="text-brand-500 font-black px-1 tracking-wider text-xs">4MACC</span> FOR FREE SOCKS!
         </div>
     </div>
 
@@ -374,9 +374,15 @@
                         <div class="flex justify-center items-center h-[240px] md:h-[400px] relative bg-white rounded-[24px] p-6 ring-2 ring-brand-500 ring-offset-2 ring-offset-light-50 shadow-sm">
                             <img id="mainImage" src="" class="h-full w-full object-contain filter drop-shadow-2xl transition-transform duration-500 hover:scale-105">
                         </div>
+                        
+                        <div id="gallery-container" class="hidden flex-col gap-1 mt-2">
+                            <span class="text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-stone-500 font-display pl-1">Select Style / Colorway</span>
+                            <div id="image-gallery" class="flex flex-nowrap gap-3 overflow-x-auto hide-scroll py-2 px-1 snap-x w-full">
+                                </div>
+                        </div>
                     </div>
 
-                    <div class="flex flex-col justify-center">
+                    <div class="flex flex-col justify-center mt-2 md:mt-0">
                         <div class="flex items-center gap-2 mb-2">
                             <span id="detail-category" class="text-[8px] md:text-[10px] font-bold text-stone-500 uppercase tracking-widest bg-stone-100 px-2.5 py-0.5 rounded-full border border-stone-200">Brand</span>
                         </div>
@@ -391,6 +397,11 @@
                         </div>
 
                         <p id="product-description" class="text-[11px] md:text-sm text-stone-600 font-medium leading-relaxed mb-6"></p>
+
+                        <div id="color-section" class="hidden space-y-2 mb-6">
+                            <div class="flex justify-between"><span class="text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-stone-500 font-display">Select Color</span></div>
+                            <div class="flex gap-3" id="color-options"></div>
+                        </div>
 
                         <div class="space-y-4 mb-6">
                             <div>
@@ -530,12 +541,14 @@
             },
             { 
                 id: 's6', name: 'Adidas Adizero Evo', basePrice: 3700, discountPrice: 3500, type: 'Adidas', brand: 'Adidas', 
-                image: 'images/ADIZERO.png', detailImage: 'images/ADIZERO.jpeg', 
+                image: 'images/AdidasAdizeroEvo.png', detailImage: 'images/AdidasAdizeroEvo (1).jpeg', 
+                galleryPrefix: 'images/AdidasAdizeroEvo', galleryCount: 2,
                 description: 'Classic streetwear style and comfort.', sizes: [39, 40, 41, 42, 43, 44] 
             },
             { 
                 id: 's7', name: 'New Balance 9060', basePrice: 4000, discountPrice: 3800, type: 'New Balance', brand: 'New Balance', 
-                image: 'images/NB9060.png', detailImage: 'images/NB9060.jpeg', 
+                image: 'images/NewBalance9060.png', detailImage: 'images/NewBalance9060 (1).jpeg', 
+                galleryPrefix: 'images/NewBalance9060', galleryCount: 2,
                 description: 'Classic streetwear style and comfort.', sizes: [39, 40, 41, 42, 43, 44] 
             },
             { 
@@ -570,12 +583,19 @@
             },
             { 
                 id: 's14', name: 'New Balance 2000 Series', basePrice: 4000, discountPrice: 3800, type: 'New Balance', brand: 'New Balance', 
-                image: 'images/NB2000.png', detailImage: 'images/NB2000.jpeg', 
+                image: 'images/NewBalance2000S.png', detailImage: 'images/NewBalance2000S (1).jpeg', 
+                galleryPrefix: 'images/NewBalance2000S', galleryCount: 3,
+                colors: [
+                    { name: 'Grey', hex: '#9ca3af' },
+                    { name: 'Pink', hex: '#f472b6' },
+                    { name: 'Blue', hex: '#60a5fa' }
+                ],
                 description: 'Classic streetwear style and comfort.', sizes: [39, 40, 41, 42, 43, 44] 
             },
             { 
-                id: 's15', name: 'Puma XL', basePrice: 3600, discountPrice: 3300, type: 'Others', brand: 'Puma', 
-                image: 'images/PUMA_XL.png', detailImage: 'images/PUMA_XL.jpeg', 
+                id: 's15', name: 'Vans Old Skool', basePrice: 3500, discountPrice: 3300, type: 'Others', brand: 'Vans', 
+                image: 'images/VansOldSkool.png', detailImage: 'images/VansOldSkool (2).jpeg', 
+                galleryPrefix: 'images/VansOldSkool', galleryStart: 2, galleryCount: 5,
                 description: 'Classic streetwear style and comfort.', sizes: [39, 40, 41, 42, 43, 44] 
             },
             { 
@@ -590,13 +610,15 @@
             },
             { 
                 id: 's18', name: 'Jumpman', basePrice: 4000, discountPrice: 3500, type: 'Nike', brand: 'Jordan', 
-                image: 'images/JUMPMAN.png', detailImage: 'images/JUMPMAN.jpeg', 
+                image: 'images/Jumpman.png', detailImage: 'images/Jumpman (1).jpeg', 
+                galleryPrefix: 'images/Jumpman', galleryCount: 2,
                 description: 'Classic streetwear style and comfort.', sizes: [39, 40, 41, 42, 43, 44] 
             },
             { 
                 id: 's19', name: 'Timberlands', basePrice: 4500, discountPrice: 4300, type: 'Others', brand: 'Timberland', 
-                image: 'images/TIMBERLANDS.png', detailImage: 'images/TIMBERLANDS.jpeg', 
-                description: 'Classic streetwear style and comfort.', sizes: [39, 40, 41, 42, 43, 44] 
+                image: 'images/Timberland Boots.png', detailImage: 'images/Timberland Boots (1).jpeg', 
+                galleryPrefix: 'images/Timberland Boots', galleryCount: 7,
+                description: 'Classic streetwear style and comfort.', sizes: [39, 40, 41, 42, 43, 44, 45] 
             },
             { 
                 id: 's20', name: 'Airmax 95', basePrice: 4000, discountPrice: 3800, type: 'Nike', brand: 'Nike', 
@@ -604,13 +626,38 @@
                 description: 'Classic streetwear style and comfort.', sizes: [39, 40, 41, 42, 43, 44] 
             },
             { 
-                id: 's21', name: 'Jordan 3\'s', basePrice: 3800, discountPrice: 3600, type: 'Nike', brand: 'Jordan', 
-                image: 'images/J3.png', detailImage: 'images/J3.jpeg', 
-                description: 'Classic streetwear style and comfort.', sizes: [39, 40, 41, 42, 43, 44] 
+                id: 's21', name: "Jordan 3's", basePrice: 4000, discountPrice: 3800, type: 'Nike', brand: 'Jordan', 
+                image: "images/Jordan3's.png", detailImage: "images/Jordan3's (1).jpeg", 
+                galleryPrefix: "images/Jordan3's", galleryCount: 6,
+                description: 'Classic streetwear style and comfort.', sizes: [39, 40, 41, 42, 43, 44, 45] 
+            },
+            { 
+                id: 's22', name: 'Classic Clogs', basePrice: 3500, discountPrice: 3300, type: 'Others', brand: 'Crocs', 
+                image: 'images/CLOGS.png', detailImage: 'images/CLOGS (1).jpeg', 
+                galleryPrefix: 'images/CLOGS', galleryCount: 3,
+                description: 'Comfortable everyday clogs.', sizes: [40, 41, 42, 43, 44, 45] 
+            },
+            { 
+                id: 's23', name: 'Designer Sandals', basePrice: 2500, discountPrice: 2300, type: 'Others', brand: 'Designer', 
+                image: 'images/DESIGNER SANDALS.png', detailImage: 'images/DESIGNER SANDALS (1).jpeg', 
+                galleryPrefix: 'images/DESIGNER SANDALS', galleryCount: 8,
+                description: 'Premium aesthetic sandals.', sizes: [40, 41, 42, 43, 44, 45] 
+            },
+            { 
+                id: 's24', name: 'Airmax 95S', basePrice: 4000, discountPrice: 3800, type: 'Nike', brand: 'Nike', 
+                image: 'images/AIRMAX 95S.png', detailImage: 'images/AIRMAX 95S (1).jpeg', 
+                galleryPrefix: 'images/AIRMAX 95S', galleryCount: 23,
+                description: 'Iconic Airmax comfort and style.', sizes: [39, 40, 41, 42, 43, 44, 45] 
+            },
+            { 
+                id: 's26', name: "Jordan 4's", basePrice: 3800, discountPrice: 3600, type: 'Nike', brand: 'Jordan', 
+                image: "images/Jordan4s.png", detailImage: "images/Jordan 4's (12).jpeg", 
+                galleryPrefix: "images/Jordan 4's", galleryStart: 12, galleryCount: 5,
+                description: 'Classic retro streetwear sneakers.', sizes: [38, 39, 40, 41, 42, 43, 44, 45] 
             }
         ];
 
-        let currentSelection = { product: null, size: '', finalPrice: 0 };
+        let currentSelection = { product: null, size: '', color: '', finalPrice: 0, image: '' };
         let activeCategoryFilter = 'all';
         let cart = JSON.parse(localStorage.getItem('quickmacc_cart_v5_png')) || [];
         let activePromo = false;
@@ -641,8 +688,16 @@
             
             const target = document.getElementById(id); 
             if(id === 'catalog') { target.style.display = 'block'; } else { target.style.display = 'flex'; } 
-            setTimeout(() => { target.classList.add('active'); updateNavBackground(); }, 10);
-            window.scrollTo(0,0);
+            
+            setTimeout(() => { 
+                target.classList.add('active'); 
+                updateNavBackground(); 
+                
+                // Force scroll to top (fixes the mobile view jump bug)
+                window.scrollTo(0, 0);
+                document.body.scrollTop = 0;
+                document.documentElement.scrollTop = 0;
+            }, 50);
         }
 
         function navigateFromMenu(id) { toggleMobileMenu(); setTimeout(() => showPage(id), 200); }
@@ -745,15 +800,27 @@
             }); 
         }
 
+        function updateActiveThumbnail(el, imgSrc) {
+            document.querySelectorAll('.thumb-wrapper').forEach(thumb => {
+                thumb.classList.remove('border-brand-500', 'opacity-100');
+                thumb.classList.add('border-transparent', 'opacity-60');
+            });
+            el.classList.remove('border-transparent', 'opacity-60');
+            el.classList.add('border-brand-500', 'opacity-100');
+            
+            // Save the newly selected style image for the cart
+            currentSelection.image = imgSrc; 
+            document.getElementById('mainImage').src = imgSrc;
+        }
+
         function selectProduct(index) { 
             const p = products[index]; 
             currentSelection.product = p; 
+            currentSelection.image = p.detailImage || p.image; // Default image
             
             document.getElementById('product-title').innerText = p.name; 
             document.getElementById('detail-category').innerText = p.brand; 
-            
-            document.getElementById('mainImage').src = p.detailImage || p.image; 
-            
+            document.getElementById('mainImage').src = currentSelection.image; 
             document.getElementById('product-description').innerText = p.description; 
             
             const promoEl = document.getElementById('detail-promo-badge');
@@ -765,6 +832,36 @@
                 promoEl.classList.add('hidden');
             }
 
+            // BUILD IMAGE GALLERY (REMOVED LIMIT SO IT ALWAYS SCROLLS)
+            let galleryHTML = '';
+            let images = [];
+            if (p.galleryCount && p.galleryPrefix) {
+                let start = p.galleryStart || 1;
+                let limit = p.galleryCount; // Uncapped logic for scrolling
+                for(let i=0; i<limit; i++) {
+                    let currentNum = start + i;
+                    images.push(`${p.galleryPrefix} (${currentNum}).jpeg`);
+                }
+            } else {
+                images = [p.detailImage || p.image];
+            }
+
+            if (images.length > 1) {
+                document.getElementById('gallery-container').classList.remove('hidden');
+                document.getElementById('gallery-container').classList.add('flex');
+                
+                images.forEach((imgSrc, i) => {
+                    const activeClass = i === 0 ? 'border-brand-500 opacity-100' : 'border-transparent opacity-60';
+                    galleryHTML += `<div class="thumb-wrapper w-16 h-16 md:w-20 md:h-20 shrink-0 rounded-xl overflow-hidden border-2 ${activeClass} hover:border-brand-500 hover:opacity-100 cursor-pointer transition-all bg-white shadow-sm snap-start" onclick="updateActiveThumbnail(this, '${imgSrc}')">
+                        <img src="${imgSrc}" class="w-full h-full object-cover">
+                    </div>`;
+                });
+                document.getElementById('image-gallery').innerHTML = galleryHTML;
+            } else {
+                document.getElementById('gallery-container').classList.add('hidden');
+                document.getElementById('gallery-container').classList.remove('flex');
+            }
+
             updateConfigHTML(p); 
             showPage('product-detail-view'); 
         }
@@ -772,15 +869,36 @@
         function updateConfigHTML(product) { 
             currentSelection.size = product.sizes[0];
             currentSelection.finalPrice = product.basePrice;
+            currentSelection.color = product.colors ? product.colors[0].name : '';
             
             recalcPrice();
 
-            const container = document.getElementById('size-options'); 
-            container.innerHTML = ''; 
+            // Set Sizes
+            const sizeContainer = document.getElementById('size-options'); 
+            sizeContainer.innerHTML = ''; 
             product.sizes.forEach((size) => { 
                 const activeClass = (size === currentSelection.size) ? "bg-stone-900 border-stone-900 text-white shadow-md" : "bg-[#fafaf9] border-black/5 text-stone-500 hover:bg-stone-100";
-                container.innerHTML += `<button onclick="setSize(${size})" class="size-btn border ${activeClass} py-2.5 md:py-3 rounded-lg text-[10px] md:text-xs font-bold transition-all font-sans" data-size="${size}">SZ ${size}</button>`; 
+                sizeContainer.innerHTML += `<button onclick="setSize(${size})" class="size-btn border ${activeClass} py-2.5 md:py-3 rounded-lg text-[10px] md:text-xs font-bold transition-all font-sans" data-size="${size}">SZ ${size}</button>`; 
             }); 
+
+            // Set Colors (if available)
+            const colorSection = document.getElementById('color-section');
+            const colorContainer = document.getElementById('color-options');
+            if (product.colors && product.colors.length > 0) {
+                colorSection.classList.remove('hidden');
+                colorContainer.innerHTML = '';
+                product.colors.forEach((color) => {
+                    const activeClass = (color.name === currentSelection.color) ? "ring-2 ring-offset-2 ring-stone-900" : "ring-1 ring-black/10 hover:ring-black/30";
+                    colorContainer.innerHTML += `
+                    <button onclick="setColor('${color.name}')"
+                            class="color-btn w-8 h-8 md:w-10 md:h-10 rounded-full transition-all ${activeClass}"
+                            style="background-color: ${color.hex};"
+                            data-color="${color.name}" title="${color.name}">
+                    </button>`;
+                });
+            } else {
+                colorSection.classList.add('hidden');
+            }
         }
 
         function recalcPrice() {
@@ -800,13 +918,26 @@
             }); 
         }
 
+        function setColor(colorName) {
+            currentSelection.color = colorName;
+            document.querySelectorAll('.color-btn').forEach(b => {
+                if (b.dataset.color === colorName) {
+                    b.className = `color-btn w-8 h-8 md:w-10 md:h-10 rounded-full transition-all ring-2 ring-offset-2 ring-stone-900`;
+                } else {
+                    b.className = `color-btn w-8 h-8 md:w-10 md:h-10 rounded-full transition-all ring-1 ring-black/10 hover:ring-black/30`;
+                }
+            });
+        }
+
         function backFromCart() { showPage('catalog'); }
 
         function quickAddToCart(id) {
             const product = products.find(p => p.id === id);
             currentSelection.product = product;
             currentSelection.size = product.sizes[0];
+            currentSelection.color = product.colors ? product.colors[0].name : '';
             currentSelection.finalPrice = product.basePrice;
+            currentSelection.image = product.image; // Default image for quick add
             addToCart();
         }
 
@@ -815,14 +946,15 @@
                 cartId: Date.now(), 
                 id: currentSelection.product.id,
                 name: currentSelection.product.name,
-                image: currentSelection.product.image, 
+                image: currentSelection.image, // Saves specific colorway chosen
                 size: currentSelection.size, 
+                color: currentSelection.color,
                 price: currentSelection.finalPrice,
                 discountPrice: currentSelection.product.discountPrice,
                 qty: 1
             }; 
             
-            const existing = cart.find(i => i.id === item.id && i.size === item.size);
+            const existing = cart.find(i => i.id === item.id && i.size === item.size && i.image === item.image && i.color === item.color);
             if(existing) {
                 existing.qty += 1;
             } else {
@@ -933,6 +1065,7 @@
                                 <div class="flex-1">
                                     <h4 class="font-display font-black text-[11px] md:text-sm text-stone-900 leading-tight mb-1 uppercase">${item.name}</h4>
                                     <p class="text-[9px] md:text-[10px] text-stone-500 font-sans font-bold mb-1">Size: SZ ${item.size}</p>
+                                    ${item.color ? `<p class="text-[9px] md:text-[10px] text-stone-500 font-sans font-bold mb-1">Color: ${item.color}</p>` : ''}
                                     
                                     <div class="flex items-center gap-2 mb-1">
                                         <p class="text-[11px] md:text-xs font-sans font-black text-stone-900">KSh ${itemPrice.toLocaleString()}</p>
@@ -963,7 +1096,8 @@
         function buyNow() { 
             const p = currentSelection.product; 
             let msg = '🔥 *QUICKMACC STORE: QUICK ORDER*\n\n';
-            msg += `*Sneaker:* ${p.name}\n*Size:* SZ ${currentSelection.size}\n`; 
+            let colorText = currentSelection.color ? `\n*Color:* ${currentSelection.color}` : '';
+            msg += `*Sneaker:* ${p.name}\n*Size:* SZ ${currentSelection.size}${colorText}\n`; 
             if (activePromo) msg += `*Promo:* 🎁 4MACC Applied\n`;
             
             let finalP = activePromo && p.discountPrice ? p.discountPrice : currentSelection.finalPrice;
@@ -980,6 +1114,7 @@
             cart.forEach((item) => { 
                 let itemPrice = item.price;
                 let promoText = "";
+                let colorText = item.color ? ` | Color: ${item.color}` : '';
                 
                 if (activePromo && item.discountPrice) {
                     itemPrice = item.discountPrice;
@@ -987,7 +1122,7 @@
                 }
                 
                 total += (itemPrice * item.qty); 
-                msg += `▪️ ${item.qty}x ${item.name}\n   Size: SZ ${item.size}${promoText}\n`;
+                msg += `▪️ ${item.qty}x ${item.name}\n   Size: SZ ${item.size}${colorText}${promoText}\n`;
                 msg += `   = KSh ${(itemPrice * item.qty).toLocaleString()}\n\n`; 
             }); 
             
