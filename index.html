@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>QuickMacc Store | Premium Sneakers</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Space+Grotesk:wght@700;900&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { 
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif']
+                    },
+                    colors: {
+                        brand: { 500: '#ea580c', 600: '#c2410c' }, 
+                        dark: { 900: '#111827', 950: '#030712' },
+                        light: { 50: '#fafaf9', 100: '#f5f5f4' }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* --- BASE STYLES --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html, body { height: 100%; width: 100%; overflow-x: hidden; scroll-behavior: smooth; display: flex; flex-direction: column; background-color: #fafaf9; color: #1c1917; } 
+        
+        /* --- SCROLLBAR --- */
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #d6d3d1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #ea580c; }
+        .hide-scroll::-webkit-scrollbar { display: none; }
+
+        /* --- PROMO BANNER (MOVING BELT) --- */
+        .promo-banner {
+            background-color: #030712; 
+            color: white;
+            padding: 8px 0;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 2000;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            font-family: 'Space Grotesk', sans-serif;
+            text-transform: uppercase;
+        }
+        .promo-marquee {
+            display: inline-block;
+            white-space: nowrap;
+            animation: marquee 15s linear infinite;
+        }
+        @keyframes marquee {
+            0% { transform: translateX(100vw); }
+            100% { transform: translateX(-100%); }
+        }
+
+        /* Adjust Nav for Promo Banner */
+        nav { top: 34px !important; }
+        #mobile-menu { padding-top: 34px; }
+
+        /* --- HONEY CART --- */
+        .cart-icon-wrapper {
+            position: relative;
+            display: flex; align-items: center; justify-content: center;
+            transition: transform 0.2s;
+            cursor: pointer; color: #1c1917;
+            padding: 4px;
+        }
+        .cart-icon-wrapper:active { transform: scale(0.95); }
+
+        .cart-badge {
+            position: absolute; top: -2px; right: -6px;
+            background-color: #ea580c; color: white;
+            font-size: 10px; font-weight: 800; height: 18px; width: 18px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            opacity: 0; transform: scale(0);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 10; font-family: 'Space Grotesk', sans-serif;
+        }
+        .cart-badge.visible { opacity: 1; transform: scale(1); }
+        
+        .cart-pulse { animation: softPop 0.4s ease-in-out; }
+        @keyframes softPop { 0% { transform: scale(1); } 50% { transform: scale(1.3); } 100% { transform: scale(1); } }
+
+        /* --- SNEAKER PRODUCT CARDS (WITH 3D POP) --- */
+        .product-image-container {
+            height: 160px;
+            display: flex; align-items: center; justify-content: center;
+            position: relative; z-index: 10;
+            margin-bottom: 1rem;
+            background: #f5f5f4;
+            border-radius: 12px;
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+        @media (min-width: 768px) { .product-image-container { height: 200px; } }
+        
+        .product-img {
+            max-height: 85%; max-width: 85%; object-fit: contain;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            filter: drop-shadow(0 15px 15px rgba(0,0,0,0.25));
+        }
+
+        /* The 3D Floating Rotation Effect */
+        .group:hover .product-img {
+            transform: scale(1.15) translateY(-10px) rotate(-8deg);
+        }
+
+        /* --- VIEWS --- */
+        nav { height: 60px; padding-top: max(10px, env(safe-area-inset-top)); z-index: 100; transition: background-color 0.3s, box-shadow 0.3s; }
+        @media (min-width: 768px) { nav { height: 70px; } }
+        nav.scrolled { background: rgba(250, 250, 249, 0.95); backdrop-filter: blur(10px); box-shadow: 0 4px 20px rgba(0,0,0,0.05); border-bottom: 1px solid rgba(0,0,0,0.05); }
+        
+        .page { display: none; flex-direction: column; flex: 1; padding-top: 60px; opacity: 0; transition: opacity 0.3s ease; position: relative; z-index: 10; }
+        @media (min-width: 768px) { .page { padding-top: 80px; } }
+        .page.active { display: flex; opacity: 1; animation: fadeIn 0.4s ease forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- TOAST --- */
+        #toast {
+            position: fixed; top: 110px; left: 50%; transform: translateX(-50%) translateY(-50px);
+            background: #030712; color: white;
+            padding: 12px 24px; border-radius: 50px; font-family: 'Space Grotesk', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+            z-index: 3000; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s;
+            opacity: 0; pointer-events: none; display: flex; align-items: center; gap: 8px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); font-size: 11px;
+        }
+        #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+        /* --- LOADER --- */
+        #loader { 
+            position: fixed; inset: 0; background: #fafaf9; z-index: 99999; 
+            display: flex; flex-direction: column; justify-content: center; align-items: center; 
+            transition: opacity 0.5s ease; 
+        }
+        .spinner { 
+            width: 40px; height: 40px; border: 4px solid rgba(234, 88, 12, 0.2); 
+            border-top-color: #ea580c; border-radius: 50%; 
+            animation: spin 1s linear infinite; margin-bottom: 16px; 
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* --- SNEAKER MELON CARDS (4 COLUMNS) --- */
+        .melon-card { position: relative; border-radius: 16px; padding: 16px; height: 110px; display: flex; flex-direction: column; justify-content: center; overflow: visible; cursor: pointer; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease; border: 1px solid rgba(0,0,0,0.05); margin-bottom: 10px; }
+        .melon-card.bg-nike { background: linear-gradient(135deg, #111827, #030712); color: white; }
+        .melon-card.bg-adidas { background: linear-gradient(135deg, #1d4ed8, #1e3a8a); color: white; }
+        .melon-card.bg-nb { background: linear-gradient(135deg, #e5e5e5, #d4d4d4); color: #1c1917; }
+        .melon-card.bg-others { background: linear-gradient(135deg, #ea580c, #c2410c); color: white; }
+
+        .melon-img { position: absolute; right: -5%; top: 50%; transform: translateY(-50%); height: 130%; object-fit: contain; z-index: 10; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), right 0.4s ease; filter: drop-shadow(-10px 15px 15px rgba(0,0,0,0.3)); pointer-events: none;}
+        
+        @media (min-width: 768px) {
+            .melon-card { height: 160px; margin-bottom: 0; padding: 24px; border-radius: 20px; }
+            .melon-img { height: 140%; right: 2%; }
+            .melon-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.15); z-index: 20; }
+            .melon-card:hover .melon-img { transform: translateY(-50%) scale(1.15) rotate(-10deg); right: -2%; }
+        }
+        @media (max-width: 768px) { 
+            .melon-img { right: -8%; height: 120%; } 
+        }
+        .melon-force-hover { transform: translateY(-4px) scale(1.02) !important; box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important; z-index: 20; }
+        .melon-force-hover .melon-img { transform: translateY(-50%) scale(1.15) rotate(-10deg) !important; right: 2% !important; }
+
+        /* --- FORMS & INPUTS --- */
+        input[type="text"], select { background: #FFFFFF; border: 1px solid rgba(0,0,0,0.1); color: #1c1917; outline: none; font-family: 'Inter', sans-serif; }
+        input[type="text"]:focus, select:focus { border-color: #ea580c; box-shadow: 0 0 0 3px rgba(234,88,12,0.1); }
+        
+        /* PILLS */
+        .cat-pill { white-space: nowrap; padding: 6px 16px; border-radius: 99px; font-size: 11px; font-weight: 700; border: 1px solid rgba(0,0,0,0.1); transition: all 0.2s; cursor: pointer; background: white; color: #57534e; text-transform: uppercase; letter-spacing: 1px; font-family: 'Space Grotesk', sans-serif;}
+        .cat-active { background: #030712; color: white; border-color: #030712; }
+    </style>
+</head>
+<body class="antialiased flex flex-col min-h-screen pt-8">
+
+    <div id="loader">
+        <div class="spinner"></div>
+        <div class="text-xl font-display font-black tracking-tighter text-stone-900 uppercase">
+            QUICK<span class="text-brand-500">MACC</span>
+        </div>
+    </div>
+
+    <div class="promo-banner">
+        <div class="promo-marquee">
+            USE CODE <span class="text-brand-500 font-black px-1 tracking-wider text-xs">4MACC</span> FOR A DISCOUNT AND A CUSTOM BOX!
+        </div>
+    </div>
+
+    <div id="toast">
+        <i class="fas fa-check-circle text-brand-500"></i> 
+        <span id="toast-msg">Added to bag</span>
+    </div>
+
+    <nav id="navbar" class="fixed w-full z-50 bg-[#fafaf9]/95 backdrop-blur-md border-b border-black/5 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 md:px-8 h-full flex items-center justify-between">
+            <button class="text-stone-900 text-xl md:hidden p-2" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <div class="text-lg md:text-2xl font-display font-black tracking-tighter cursor-pointer flex items-center gap-2 text-stone-900 uppercase" onclick="showPage('home')">
+                QUICK<span class="text-brand-500">MACC</span>
+            </div>
+
+            <div class="hidden md:flex items-center gap-8 text-xs font-bold text-stone-600 uppercase tracking-widest font-display">
+                <button onclick="showPage('home')" class="hover:text-brand-500 transition cursor-pointer">Home</button>
+                <button onclick="showPage('catalog')" class="hover:text-brand-500 transition cursor-pointer">Shop</button>
+                <button onclick="showPage('contact-page')" class="hover:text-brand-500 transition cursor-pointer">Contact</button>
+                
+                <a href="https://www.instagram.com/quickkmacc_stores?igsh=MWFva210M294NnY1ZA==" target="_blank" class="hover:text-brand-500 transition cursor-pointer text-lg ml-2">
+                    <i class="fab fa-instagram"></i>
+                </a>
+            </div>
+
+            <div class="flex items-center gap-4 text-stone-900">
+                <div class="relative cursor-pointer group cart-icon-wrapper" id="cart-icon" onclick="openCart()">
+                    <i class="fas fa-shopping-cart text-xl md:text-2xl text-stone-900"></i>
+                    <div id="cart-badge" class="cart-badge">0</div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div id="mobile-menu-overlay" class="fixed inset-0 bg-stone-900/60 backdrop-blur-sm z-[105] opacity-0 pointer-events-none transition-opacity duration-300 md:hidden" onclick="toggleMobileMenu()"></div>
+    
+    <div id="mobile-menu" class="fixed top-0 right-0 translate-x-full w-[75%] h-full z-[110] bg-[#fafaf9] shadow-2xl flex flex-col py-8 px-6 transition-transform duration-300 ease-in-out border-l border-black/10 md:hidden">
+        <button class="absolute top-4 right-4 text-stone-900 text-2xl p-2" onclick="toggleMobileMenu()">&times;</button>
+        
+        <div class="flex flex-col items-start space-y-6 text-2xl font-display font-black w-full tracking-wider text-stone-900 mt-10 uppercase">
+            <button onclick="navigateFromMenu('home')" class="hover:text-brand-500 text-left w-full transition-colors border-b border-black/5 pb-3">Home</button>
+            <button onclick="navigateFromMenu('catalog')" class="hover:text-brand-500 text-left w-full transition-colors border-b border-black/5 pb-3">Shop Kicks</button>
+            <button onclick="navigateFromMenu('contact-page')" class="hover:text-brand-500 text-left w-full transition-colors border-b border-black/5 pb-3">Contact</button>
+            <button onclick="openCart(); toggleMobileMenu();" class="text-brand-500 text-left w-full border-b border-black/5 pb-3">My Bag</button>
+        </div>
+        
+        <div class="mt-auto flex flex-col items-center gap-5 w-full pt-6">
+            <a href="https://www.instagram.com/quickkmacc_stores?igsh=MWFva210M294NnY1ZA==" target="_blank" class="text-2xl text-stone-900/50 hover:text-brand-500 transition-colors">
+                <i class="fab fa-instagram"></i>
+            </a>
+            <button onclick="toggleMobileMenu()" class="text-[10px] text-stone-500 border border-gray-200 px-6 py-2 rounded-full font-bold w-full text-center active:bg-gray-100">CLOSE</button>
+        </div>
+    </div>
+
+    <main class="z-10 relative flex-1 flex flex-col">
+
+        <section id="home" class="page active pt-[30px] md:pt-[50px]">
+            <div class="max-w-6xl mx-auto w-full px-4 md:px-8 py-6 md:py-10 flex flex-col items-center">
+                
+                <div class="text-center mb-8 md:mb-12 flex flex-col items-center">
+                    <span class="text-brand-600 bg-brand-50 border border-brand-200 px-3 py-1 rounded-full text-[9px] md:text-[10px] font-bold uppercase tracking-[0.2em] mb-4 inline-flex items-center gap-1.5"><i class="fas fa-fire"></i> Premium Kicks</span>
+                    <h1 class="text-4xl md:text-6xl lg:text-7xl font-display font-black text-stone-900 leading-tight uppercase tracking-tighter">
+                        Step Up <br><span class="text-brand-500">Your Game</span>
+                    </h1>
+                    <p class="text-stone-500 font-sans text-xs md:text-sm mt-4 max-w-md mx-auto font-medium leading-relaxed">The freshest drops and exclusive streetwear sneakers, delivered to your door.</p>
+                </div>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-5 w-full">
+                    
+                    <div onclick="handleMelonTap('Nike', this)" class="melon-card bg-nike group">
+                        <div class="relative z-30 w-[60%] md:w-[65%]">
+                            <h3 class="text-base md:text-xl font-display font-black mb-1 leading-tight uppercase tracking-wide">Nike</h3>
+                            <span class="text-[8px] md:text-[10px] font-bold text-stone-300 mt-1 flex items-center gap-1 uppercase tracking-widest">Shop <i class="fas fa-arrow-right text-[8px]"></i></span>
+                        </div>
+                        <img src="images/AF1.png" class="melon-img" onerror="this.src='https://via.placeholder.com/400x400/030712/ffffff?text=NIKE'">
+                    </div>
+
+                    <div onclick="handleMelonTap('Adidas', this)" class="melon-card bg-adidas group">
+                        <div class="relative z-30 w-[60%] md:w-[65%]">
+                            <h3 class="text-base md:text-xl font-display font-black mb-1 leading-tight uppercase tracking-wide">Adidas</h3>
+                            <span class="text-[8px] md:text-[10px] font-bold text-blue-200 mt-1 flex items-center gap-1 uppercase tracking-widest">Shop <i class="fas fa-arrow-right text-[8px]"></i></span>
+                        </div>
+                        <img src="images/SAMBAS.png" class="melon-img" onerror="this.src='https://via.placeholder.com/400x400/1d4ed8/ffffff?text=ADIDAS'">
+                    </div>
+
+                    <div onclick="handleMelonTap('New Balance', this)" class="melon-card bg-nb group">
+                        <div class="relative z-30 w-[60%] md:w-[65%]">
+                            <h3 class="text-base md:text-xl font-display font-black mb-1 leading-tight uppercase tracking-wide">New<br>Balance</h3>
+                            <span class="text-[8px] md:text-[10px] font-bold text-stone-500 mt-1 flex items-center gap-1 uppercase tracking-widest">Shop <i class="fas fa-arrow-right text-[8px]"></i></span>
+                        </div>
+                        <img src="images/NB1000.png" class="melon-img" onerror="this.src='https://via.placeholder.com/400x400/e5e5e5/1c1917?text=NB'">
+                    </div>
+
+                    <div onclick="handleMelonTap('DrMartins', this)" class="melon-card bg-others group">
+                        <div class="relative z-30 w-[60%] md:w-[65%]">
+                            <h3 class="text-base md:text-xl font-display font-black mb-1 leading-tight uppercase tracking-wide">Dr.<br>Martens</h3>
+                            <span class="text-[8px] md:text-[10px] font-bold text-orange-200 mt-1 flex items-center gap-1 uppercase tracking-widest">Shop <i class="fas fa-arrow-right text-[8px]"></i></span>
+                        </div>
+                        <img src="images/DRMARTINS.png" class="melon-img" onerror="this.src='https://via.placeholder.com/400x400/ea580c/ffffff?text=DRMARTENS'">
+                    </div>
+
+                </div>
+            </div>
+            
+            <div class="w-full flex justify-center py-6 mt-auto">
+                <a href="https://www.whats-cart.com/" target="_blank" class="flex flex-row items-center justify-center gap-2 opacity-60 hover:opacity-100 transition-opacity">
+                    <span class="font-display text-[10px] text-stone-400 uppercase tracking-[0.1em] font-bold">POWERED BY</span>
+                    <div class="w-5 h-5 bg-stone-900 rounded flex items-center justify-center text-white text-[9px] shadow-sm"><i class="fas fa-shopping-cart"></i></div>
+                </a>
+            </div>
+        </section>
+
+        <section id="catalog" class="page bg-transparent">
+            <div class="max-w-7xl mx-auto w-full flex flex-col h-full">
+                
+                <div class="px-4 md:px-8 py-3 z-20 sticky top-[60px] md:top-[70px] bg-[#fafaf9]/95 backdrop-blur-md flex flex-col gap-3 border-b border-black/5 shadow-sm">
+                    <div class="flex flex-row items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <button onclick="showPage('home')" class="text-stone-700 hover:text-stone-900 transition flex items-center justify-center w-7 h-7 rounded-full bg-white border border-black/10 shadow-sm"><i class="fas fa-arrow-left text-[10px]"></i></button>
+                            <h2 class="text-xl md:text-2xl font-display font-black text-stone-900 m-0 uppercase tracking-tight">All Kicks</h2>
+                        </div>
+                        
+                        <div class="relative hidden lg:block w-64">
+                            <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-stone-400 text-xs"></i>
+                            <input type="text" id="searchInputDesk" onkeyup="handleSearch(this.value)" placeholder="Search sneakers..." class="w-full bg-white border border-black/10 text-stone-900 pl-8 pr-3 py-2 rounded-full focus:border-brand-500 transition-colors text-xs font-sans shadow-sm">
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-col md:flex-row gap-2 justify-between items-start md:items-center">
+                        <div class="category-scroll flex gap-2 overflow-x-auto w-full md:w-auto hide-scroll pb-1 md:pb-0">
+                            <button onclick="setFilter('all', this)" class="cat-pill cat-active">All</button>
+                            <button onclick="setFilter('Nike', this)" class="cat-pill">Nike</button>
+                            <button onclick="setFilter('Adidas', this)" class="cat-pill">Adidas</button>
+                            <button onclick="setFilter('New Balance', this)" class="cat-pill">New Balance</button>
+                            <button onclick="setFilter('DrMartins', this)" class="cat-pill">Dr. Martens</button>
+                        </div>
+                        
+                        <div class="relative w-full lg:hidden block mt-1">
+                            <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-stone-400 text-xs"></i>
+                            <input type="text" id="searchInputMob" onkeyup="handleSearch(this.value)" placeholder="Search sneakers..." class="w-full bg-white border border-black/10 text-stone-900 pl-8 pr-3 py-2 rounded-full focus:border-brand-500 transition-colors text-xs font-sans shadow-sm">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-1 relative">
+                    <div class="flex-1 pb-10 pt-4 px-4 md:px-8 flex flex-col h-full overflow-y-auto">
+                        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-5 mb-8" id="grid-container">
+                            </div>
+                        
+                        <div class="w-full flex justify-center py-4 mt-auto">
+                            <a href="https://www.whats-cart.com/" target="_blank" class="flex flex-row items-center justify-center gap-2 opacity-60 hover:opacity-100 transition-opacity">
+                                <span class="font-display text-[10px] text-stone-400 uppercase tracking-[0.1em] font-bold">POWERED BY</span>
+                                <div class="w-5 h-5 bg-stone-900 rounded flex items-center justify-center text-white text-[9px] shadow-sm"><i class="fas fa-shopping-cart"></i></div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="product-detail-view" class="page bg-transparent">
+            <div class="max-w-5xl mx-auto w-full px-4 md:px-8 py-4 md:py-8 pb-20 flex flex-col h-full">
+                
+                <button onclick="showPage('catalog')" class="text-stone-500 hover:text-stone-900 font-bold text-[10px] md:text-xs uppercase tracking-widest flex items-center gap-1.5 transition mb-6 w-fit font-display">
+                    <i class="fas fa-arrow-left"></i> Back to Shop
+                </button>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-12 mb-8 flex-1">
+                    
+                    <div class="flex flex-col gap-3">
+                        <div class="flex justify-center items-center h-[240px] md:h-[400px] relative bg-white rounded-[24px] p-6 ring-2 ring-brand-500 ring-offset-2 ring-offset-light-50 shadow-sm">
+                            <img id="mainImage" src="" class="h-full w-full object-contain filter drop-shadow-2xl transition-transform duration-500 hover:scale-105">
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col justify-center">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span id="detail-category" class="text-[8px] md:text-[10px] font-bold text-stone-500 uppercase tracking-widest bg-stone-100 px-2.5 py-0.5 rounded-full border border-stone-200">Brand</span>
+                        </div>
+                        <h1 id="product-title" class="text-2xl md:text-4xl font-display font-black tracking-tighter leading-tight mb-2 text-stone-900 uppercase"></h1>
+                        
+                        <div class="flex items-end gap-2 mb-4">
+                            <div id="price-tag" class="text-xl md:text-2xl font-bold text-brand-600 font-sans"></div>
+                        </div>
+
+                        <div id="detail-promo-badge" class="hidden mb-4 bg-orange-50 border border-orange-200 text-brand-600 px-3 py-2 rounded-lg font-bold text-[10px] md:text-xs flex items-center gap-1.5 w-fit shadow-sm">
+                            <i class="fas fa-tag"></i> <span id="promo-text"></span>
+                        </div>
+
+                        <p id="product-description" class="text-[11px] md:text-sm text-stone-600 font-medium leading-relaxed mb-6"></p>
+
+                        <div class="space-y-4 mb-6">
+                            <div>
+                                <div class="flex justify-between mb-2"><span class="text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-stone-500 font-display">Select Size (SZ)</span></div>
+                                <div class="grid grid-cols-3 md:grid-cols-6 gap-2" id="size-options"></div>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row gap-2.5 mb-4">
+                            <button onclick="addToCart()" class="flex-1 bg-white text-stone-900 hover:bg-stone-50 font-black py-3 rounded-xl flex items-center justify-center gap-2 transition-all active:scale-95 text-[10px] md:text-xs uppercase tracking-widest border border-black/10 shadow-sm font-display">
+                                🛒 Add to Bag
+                            </button>
+                            <button onclick="buyNow()" class="flex-1 bg-[#25D366] hover:bg-[#20bd5a] text-white font-black py-3 rounded-xl flex items-center justify-center gap-2 transition-all active:scale-95 text-[10px] md:text-xs uppercase tracking-widest shadow-sm font-display">
+                                <i class="fab fa-whatsapp text-sm md:text-base"></i> Order via WhatsApp
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="cart-page" class="page bg-transparent">
+            <div class="max-w-5xl mx-auto w-full px-4 md:px-8 py-4 md:py-8 flex flex-col h-full">
+                <div class="flex items-center justify-between mb-6">
+                    <button onclick="backFromCart()" class="text-stone-700 hover:text-stone-900 font-bold text-[10px] md:text-xs uppercase tracking-widest flex items-center gap-1.5 transition w-fit font-display">
+                        <i class="fas fa-arrow-left"></i> Keep Shopping
+                    </button>
+                    <button onclick="clearCart()" class="text-[9px] font-bold text-red-500 bg-red-50 px-3 py-1.5 rounded-full hover:bg-red-100 transition border border-red-100 font-display">Clear Bag</button>
+                </div>
+                
+                <h2 class="text-2xl md:text-3xl font-display font-black mb-6 tracking-tighter text-stone-900 uppercase">Your Bag <span id="cart-count-header" class="text-brand-500 text-base font-sans"></span></h2>
+                
+                <div class="flex flex-col lg:flex-row gap-6 items-start">
+                    
+                    <div class="flex-1 w-full overflow-y-auto hide-scroll order-1">
+                        <div id="cart-items-container" class="space-y-3"></div>
+                    </div>
+
+                    <div class="w-full lg:w-[360px] bg-white border border-black/5 shadow-xl p-5 md:p-6 rounded-2xl lg:sticky top-[100px] order-2">
+                        
+                        <div class="mb-4">
+                            <div class="flex gap-2">
+                                <input type="text" id="promo-code-input" placeholder="Discount Code" class="flex-1 border border-black/10 rounded-lg px-3 py-2.5 md:px-4 md:py-3 text-[10px] md:text-xs outline-none focus:border-brand-500 bg-white font-sans uppercase shadow-sm">
+                                <button onclick="applyPromoCode()" class="bg-stone-900 text-white px-4 py-2.5 md:px-5 md:py-3 rounded-lg text-[10px] md:text-xs font-bold shadow-sm hover:bg-stone-800 transition font-display uppercase tracking-widest">Apply</button>
+                            </div>
+                            <p id="promo-msg" class="text-[10px] font-bold mt-2 hidden transition-all"></p>
+                        </div>
+
+                        <div class="flex justify-between items-end mb-4 md:mb-6 border-t border-black/10 pt-4 md:pt-5">
+                            <span class="text-[10px] font-bold text-stone-500 uppercase tracking-widest font-display">Total</span>
+                            <span id="cart-total" class="text-xl md:text-3xl font-black text-stone-900 font-sans">KSh 0</span>
+                        </div>
+
+                        <button onclick="checkoutCart()" class="w-full bg-[#25D366] hover:bg-[#20bd5a] text-white py-3 rounded-xl font-black transition-all flex items-center justify-center gap-2 shadow-[0_4px_15px_rgba(37,211,102,0.3)] uppercase tracking-widest text-[10px] md:text-xs active:scale-95 font-display">
+                            Checkout via WhatsApp <i class="fab fa-whatsapp text-sm md:text-lg"></i>
+                        </button>
+                        
+                        <div class="w-full flex justify-center pt-4 mt-2">
+                            <a href="https://www.whats-cart.com/" target="_blank" class="flex flex-row items-center justify-center gap-2 opacity-60 transition-opacity hover:opacity-100">
+                                <span class="font-display text-[9px] text-stone-500 uppercase tracking-[0.1em] font-bold">POWERED BY</span>
+                                <div class="w-5 h-5 bg-stone-900 rounded flex items-center justify-center text-white text-[9px] shadow-sm"><i class="fas fa-shopping-cart"></i></div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact-page" class="page bg-transparent">
+            <div class="max-w-7xl mx-auto w-full px-4 md:px-8 py-8 flex flex-col h-full items-center justify-center relative">
+                <button onclick="showPage('home')" class="absolute top-4 left-4 md:top-8 md:left-8 text-stone-500 hover:text-stone-900 font-bold text-[10px] md:text-xs uppercase tracking-widest flex items-center gap-1.5 transition w-fit font-display">
+                    <i class="fas fa-arrow-left"></i> Home
+                </button>
+
+                <div class="bg-white p-5 md:p-10 rounded-[20px] md:rounded-[24px] w-full max-w-sm shadow-xl border border-black/5 text-center mt-6 md:mt-8">
+                    <div class="w-12 h-12 md:w-14 md:h-14 rounded-full bg-orange-50 text-brand-500 flex items-center justify-center mx-auto mb-4 md:mb-5 border border-orange-100 text-lg md:text-xl">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <h2 class="text-xl md:text-2xl font-display font-black tracking-tighter mb-1 text-stone-900 uppercase">QuickMacc Store</h2>
+                    <p class="text-stone-400 text-[10px] uppercase tracking-widest mb-4 md:mb-6 font-bold font-display">Nairobi, Kenya</p>
+                    
+                    <div class="bg-[#fafaf9] rounded-xl p-3 md:p-4 mb-4 md:mb-6 text-left flex items-start gap-3 border border-black/5">
+                        <i class="fas fa-location-dot text-stone-400 mt-1 text-[10px] md:text-xs"></i>
+                        <div class="text-[11px] md:text-xs text-stone-600 leading-relaxed font-sans font-medium">
+                            <span class="font-black block text-stone-900 text-xs md:text-sm mb-0.5">Online Store</span>
+                            Fast delivery nationwide
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-col gap-2 md:gap-2.5">
+                        <a href="tel:0797041522" class="w-full bg-white border border-stone-200 text-stone-900 py-2.5 md:py-3 rounded-xl font-black text-[10px] active:scale-95 transition-transform flex items-center justify-center gap-2 uppercase tracking-widest hover:bg-stone-50 font-display">
+                            <i class="fas fa-phone"></i> Call Us
+                        </a>
+                        <a href="https://wa.me/254797041522" target="_blank" class="w-full bg-[#25D366] hover:bg-[#20bd5a] text-white shadow-[0_4px_15px_rgba(37,211,102,0.3)] py-2.5 md:py-3 rounded-xl font-black text-[10px] active:scale-95 transition-transform flex items-center justify-center gap-2 uppercase tracking-widest font-display">
+                            <i class="fab fa-whatsapp text-sm"></i> Message Us
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        function updateNavBackground() {
+            const nav = document.getElementById('navbar');
+            nav.classList.add('scrolled');
+        }
+        window.addEventListener('scroll', updateNavBackground);
+
+        // --- LOCAL DATABASE ---
+        const products = [
+            { 
+                id: 's1', name: 'Nike P6000 Cool Grey & Black', basePrice: 4000, discountPrice: 3800, type: 'Nike', brand: 'Nike', 
+                image: 'images/NikeP6000.png', detailImage: 'images/NikeP6000.jpeg', 
+                description: 'Classic streetwear style and comfort.', sizes: [39, 40, 41, 42, 43, 44] 
+            },
+            { 
+                id: 's2', name: 'Asics Gel Trainers', basePrice: 4000, discountPrice: 3900, type: 'Others', brand: 'Asics', 
+                image: 'images/Asics Gel Trainers.png', detailImage: 'images/Asics Gel Trainers.jpeg', 
+                description: 'Classic streetwear style and comfort.', sizes: [39, 40, 41, 42, 43, 44] 
+            },
+            { 
+                id: 's3', name: 'Jordan 4 "Cozy Girl"', basePrice: 4200, discountPrice: 4000, type: 'Nike', brand: 'Jordan', 
+                image: 'images/J4 Cozy Girl.png', detailImage: 'images/J4 Cozy Girl.jpeg', 
+                description: 'Classic streetwear style and comfort.', sizes: [39, 40, 41, 42, 43, 44] 
+            },
+            { 
+                id: 's4', name: 'Jordan 4 "Brick By Brick"', basePrice: 4000, discountPrice: 3800, type: 'Nike', brand: 'Jordan', 
+                image: 'images/J4 Brick by Brick.png', detailImage: 'images/J4 Brick by Brick.jpeg', 
+                description: 'Classic streetwear style and comfort.', sizes: [39, 40, 41, 42, 43, 44] 
+            },
+            { 
+                id: 's5', name: 'Tuned Air', basePrice: 3700, discountPrice: 3500, type: 'Nike', brand: 'Nike', 
+                image: 'images/Tuned Air.png', detailImage: 'images/Tuned Air.jpeg', 
+                description: 'Classic streetwear style and comfort.', sizes: [39, 40, 41, 42, 43, 44] 
+            },
+            { 
+                id: 's6', name: 'Adidas Adizero Evo', basePrice: 3700, discountPrice: 3500, type: 'Adidas', brand: 'Adidas', 
+                image: 'images/ADIZERO.png', detailImage: 'images/ADIZERO.jpeg', 
+                description: 'Classic streetwear style and comfort.', sizes: [39, 40, 41, 42, 43, 44] 
+            },
+            { 
+                id: 's7', name: 'New Balance 9060', basePrice: 4000, discountPrice: 3800, type: 'New Balance', brand: 'New Balance', 
+                image: 'images/NB9060.png', detailImage: 'images/NB9060.jpeg', 
+                description: 'Classic streetwear style and comfort.', sizes: [39, 40, 41, 42, 43, 44] 
+            },
+            { 
+                id: 's8', name: 'Adidas Campus', basePrice: 3500, discountPrice: 3300, type: 'Adidas', brand: 'Adidas', 
+                image: 'images/Adidas Campus.png', detailImage: 'images/Adidas Campus.jpeg', 
+                description: 'Classic streetwear style and comfort.', sizes: [39, 40, 41, 42, 43, 44] 
+            },
+            { 
+                id: 's9', name: 'Nike Portal', basePrice: 3800, discountPrice: 3600, type: 'Nike', brand: 'Nike', 
+                image: 'images/Nike Portal.png', detailImage: 'images/Nike Portal.jpeg', 
+                description: 'Classic streetwear style and comfort.', sizes: [39, 40, 41, 42, 43, 44] 
+            },
+            { 
+                id: 's10', name: 'Dr. Martens Loafer', basePrice: 4500, discountPrice: 4300, type: 'DrMartins', brand: 'Dr. Martens', 
+                image: 'images/Dr.Martens Loafers.png', detailImage: 'images/Dr.Martens Loafers.jpeg', 
+                description: 'Classic streetwear style and comfort.', sizes: [39, 40, 41, 42, 43, 44] 
+            },
+            { 
+                id: 's11', name: 'Clarks Wallabees', basePrice: 3700, discountPrice: 3500, type: 'Others', brand: 'Clarks', 
+                image: 'images/Clarks Wallabees.png', detailImage: 'images/Clarks Wallabees.jpeg', 
+                description: 'Classic streetwear style and comfort.', sizes: [39, 40, 41, 42, 43, 44] 
+            },
+            { 
+                id: 's12', name: 'Dr. Martens Platform', basePrice: 4600, discountPrice: 4300, type: 'DrMartins', brand: 'Dr. Martens', 
+                image: 'images/Dr.Martens Platforms.png', detailImage: 'images/Dr.Martens Platforms.jpeg', 
+                description: 'Classic streetwear style and comfort.', sizes: [39, 40, 41, 42, 43, 44] 
+            },
+            { 
+                id: 's13', name: 'AF1 Custom', basePrice: 3800, discountPrice: 3500, type: 'Nike', brand: 'Nike', 
+                image: 'images/AF1.png', detailImage: 'images/AF1.jpeg', 
+                description: 'Classic streetwear style and comfort.', sizes: [39, 40, 41, 42, 43, 44] 
+            },
+            { 
+                id: 's14', name: 'New Balance 2000 Series', basePrice: 4000, discountPrice: 3800, type: 'New Balance', brand: 'New Balance', 
+                image: 'images/NB2000.png', detailImage: 'images/NB2000.jpeg', 
+                description: 'Classic streetwear style and comfort.', sizes: [39, 40, 41, 42, 43, 44] 
+            },
+            { 
+                id: 's15', name: 'Puma XL', basePrice: 3600, discountPrice: 3300, type: 'Others', brand: 'Puma', 
+                image: 'images/PUMA_XL.png', detailImage: 'images/PUMA_XL.jpeg', 
+                description: 'Classic streetwear style and comfort.', sizes: [39, 40, 41, 42, 43, 44] 
+            },
+            { 
+                id: 's16', name: 'New Balance 1000 Series', basePrice: 4000, discountPrice: 3800, type: 'New Balance', brand: 'New Balance', 
+                image: 'images/NB1000.png', detailImage: 'images/NB1000.jpeg', 
+                description: 'Classic streetwear style and comfort.', sizes: [39, 40, 41, 42, 43, 44] 
+            },
+            { 
+                id: 's17', name: 'Adidas Samba', basePrice: 3500, discountPrice: 3300, type: 'Adidas', brand: 'Adidas', 
+                image: 'images/SAMBAS.png', detailImage: 'images/SAMBAS.jpeg', 
+                description: 'Groundbreaking design and unmatched comfort.', sizes: [39, 40, 41, 42, 43, 44] 
+            },
+            { 
+                id: 's18', name: 'Jumpman', basePrice: 4000, discountPrice: 3500, type: 'Nike', brand: 'Jordan', 
+                image: 'images/JUMPMAN.png', detailImage: 'images/JUMPMAN.jpeg', 
+                description: 'Classic streetwear style and comfort.', sizes: [39, 40, 41, 42, 43, 44] 
+            },
+            { 
+                id: 's19', name: 'Timberlands', basePrice: 4500, discountPrice: 4300, type: 'Others', brand: 'Timberland', 
+                image: 'images/TIMBERLANDS.png', detailImage: 'images/TIMBERLANDS.jpeg', 
+                description: 'Classic streetwear style and comfort.', sizes: [39, 40, 41, 42, 43, 44] 
+            },
+            { 
+                id: 's20', name: 'Airmax 95', basePrice: 4000, discountPrice: 3800, type: 'Nike', brand: 'Nike', 
+                image: 'images/Airmax 95 x Levis.png', detailImage: 'images/Airmax 95 x Levis.jpeg', 
+                description: 'Classic streetwear style and comfort.', sizes: [39, 40, 41, 42, 43, 44] 
+            },
+            { 
+                id: 's21', name: 'Jordan 3\'s', basePrice: 3800, discountPrice: 3600, type: 'Nike', brand: 'Jordan', 
+                image: 'images/J3.png', detailImage: 'images/J3.jpeg', 
+                description: 'Classic streetwear style and comfort.', sizes: [39, 40, 41, 42, 43, 44] 
+            }
+        ];
+
+        let currentSelection = { product: null, size: '', finalPrice: 0 };
+        let activeCategoryFilter = 'all';
+        let cart = JSON.parse(localStorage.getItem('quickmacc_cart_v5_png')) || [];
+        let activePromo = false;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            
+            products.sort((a, b) => a.brand.localeCompare(b.brand));
+
+            renderGrid(); 
+            updateCartUI(); 
+            updateNavBackground();
+
+            
+            setTimeout(() => {
+                const loader = document.getElementById('loader');
+                if (loader) {
+                    loader.style.opacity = '0';
+                    setTimeout(() => { loader.style.display = 'none'; }, 500);
+                }
+            }, 2000);
+        });
+
+        function showPage(id) { 
+            document.querySelectorAll('.page').forEach(p => {
+                p.classList.remove('active');
+                p.style.display = 'none';
+            }); 
+            
+            const target = document.getElementById(id); 
+            if(id === 'catalog') { target.style.display = 'block'; } else { target.style.display = 'flex'; } 
+            setTimeout(() => { target.classList.add('active'); updateNavBackground(); }, 10);
+            window.scrollTo(0,0);
+        }
+
+        function navigateFromMenu(id) { toggleMobileMenu(); setTimeout(() => showPage(id), 200); }
+        
+        function toggleMobileMenu() { 
+            const menu = document.getElementById('mobile-menu');
+            const overlay = document.getElementById('mobile-menu-overlay');
+            
+            if (menu.classList.contains('translate-x-full')) {
+                menu.classList.remove('translate-x-full');
+                menu.classList.add('translate-x-0');
+                overlay.classList.remove('opacity-0', 'pointer-events-none');
+                overlay.classList.add('opacity-100', 'pointer-events-auto');
+            } else {
+                menu.classList.add('translate-x-full');
+                menu.classList.remove('translate-x-0');
+                overlay.classList.add('opacity-0', 'pointer-events-none');
+                overlay.classList.remove('opacity-100', 'pointer-events-auto');
+            }
+        }
+
+        function handleMelonTap(cat, element) {
+            element.classList.add('melon-force-hover');
+            setTimeout(() => {
+                element.classList.remove('melon-force-hover');
+                filterFromHome(cat);
+            }, 300); 
+        }
+
+        function filterFromHome(cat) {
+            setFilter(cat);
+            showPage('catalog');
+        }
+
+        function setFilter(cat, btnElement = null) {
+            activeCategoryFilter = cat;
+            
+            document.querySelectorAll('.cat-pill').forEach(b => b.classList.remove('cat-active', 'bg-blue-950', 'text-white'));
+            if(btnElement) {
+                btnElement.classList.add('cat-active', 'bg-blue-950', 'text-white');
+            } else {
+                let pills = document.querySelectorAll('.cat-pill');
+                if(cat === 'all') pills[0].classList.add('cat-active', 'bg-blue-950', 'text-white');
+                if(cat === 'Nike') pills[1].classList.add('cat-active', 'bg-blue-950', 'text-white');
+                if(cat === 'Adidas') pills[2].classList.add('cat-active', 'bg-blue-950', 'text-white');
+                if(cat === 'New Balance') pills[3].classList.add('cat-active', 'bg-blue-950', 'text-white');
+                if(cat === 'DrMartins') pills[4].classList.add('cat-active', 'bg-blue-950', 'text-white');
+            }
+            
+            document.getElementById('searchInputDesk').value = '';
+            document.getElementById('searchInputMob').value = '';
+            handleSearch();
+        }
+
+        function handleSearch(query = '') { 
+            query = query.toLowerCase();
+            document.getElementById('searchInputDesk').value = query;
+            document.getElementById('searchInputMob').value = query;
+            
+            let filtered = products.filter(p => { 
+                const matchName = p.name.toLowerCase().includes(query); 
+                const matchCat = (activeCategoryFilter === 'all' || p.type === activeCategoryFilter || (activeCategoryFilter === 'DrMartins' && p.brand === 'Dr. Martens')); 
+                return matchName && matchCat; 
+            }); 
+            renderGrid(filtered); 
+        }
+
+        function renderGrid(data = products) { 
+            const container = document.getElementById('grid-container'); 
+            container.innerHTML = ''; 
+            
+            if (data.length === 0) { 
+                container.innerHTML = '<div class="col-span-full text-center py-20 opacity-50"><i class="fas fa-search text-4xl mb-4 text-stone-300"></i><p class="font-sans font-bold text-xs md:text-sm text-stone-500">No items found</p></div>'; 
+                return; 
+            } 
+            
+            data.forEach((p) => { 
+                const index = products.indexOf(p); 
+                
+                container.innerHTML += `
+                    <div class="bg-white border border-black/5 rounded-2xl p-3 transition hover:-translate-y-1 hover:shadow-xl hover:border-black/10 cursor-pointer group flex flex-col" onclick="selectProduct(${index})">
+                        <div class="product-image-container w-full h-24 md:h-36">
+                            <img src="${p.image}" class="product-img" onerror="this.src='https://via.placeholder.com/400/f5f5f4/1c1917?text=${p.brand}'">
+                        </div>
+                        <div class="px-1 text-center">
+                            <p class="text-[8px] md:text-[9px] font-bold text-stone-400 uppercase tracking-widest mb-0.5">${p.brand}</p>
+                            <h3 class="font-display font-black text-[12px] md:text-[14px] leading-tight mb-1 truncate w-full text-stone-900 uppercase">${p.name}</h3>
+                            <div class="text-brand-600 text-[11px] md:text-xs font-sans font-black mb-3">KSh ${p.basePrice.toLocaleString()}</div>
+                        </div>
+                        
+                        <div class="w-full flex flex-row gap-1.5 mt-auto pt-3 border-t border-black/5">
+                            <button onclick="event.stopPropagation(); quickAddToCart('${p.id}')" class="flex-1 bg-[#f5f5f4] text-stone-900 hover:bg-stone-200 font-display font-black py-2.5 rounded-lg transition-colors text-[8px] md:text-[10px] uppercase tracking-wide border border-black/5 flex justify-center items-center gap-1">
+                                🛒 Add
+                            </button>
+                            <button onclick="event.stopPropagation(); selectProduct(${index})" class="flex-1 bg-stone-900 hover:bg-stone-800 text-white font-display font-black py-2.5 rounded-lg transition-colors text-[8px] md:text-[10px] uppercase tracking-wide shadow-sm flex justify-center items-center gap-1">
+                                🔍 View Item
+                            </button>
+                        </div>
+                    </div>`; 
+            }); 
+        }
+
+        function selectProduct(index) { 
+            const p = products[index]; 
+            currentSelection.product = p; 
+            
+            document.getElementById('product-title').innerText = p.name; 
+            document.getElementById('detail-category').innerText = p.brand; 
+            
+            document.getElementById('mainImage').src = p.detailImage || p.image; 
+            
+            document.getElementById('product-description').innerText = p.description; 
+            
+            const promoEl = document.getElementById('detail-promo-badge');
+            const promoText = document.getElementById('promo-text');
+            if (activePromo) {
+                promoEl.classList.remove('hidden');
+                promoText.innerText = "Code Applied: Discount Active!";
+            } else {
+                promoEl.classList.add('hidden');
+            }
+
+            updateConfigHTML(p); 
+            showPage('product-detail-view'); 
+        }
+
+        function updateConfigHTML(product) { 
+            currentSelection.size = product.sizes[0];
+            currentSelection.finalPrice = product.basePrice;
+            
+            recalcPrice();
+
+            const container = document.getElementById('size-options'); 
+            container.innerHTML = ''; 
+            product.sizes.forEach((size) => { 
+                const activeClass = (size === currentSelection.size) ? "bg-stone-900 border-stone-900 text-white shadow-md" : "bg-[#fafaf9] border-black/5 text-stone-500 hover:bg-stone-100";
+                container.innerHTML += `<button onclick="setSize(${size})" class="size-btn border ${activeClass} py-2.5 md:py-3 rounded-lg text-[10px] md:text-xs font-bold transition-all font-sans" data-size="${size}">SZ ${size}</button>`; 
+            }); 
+        }
+
+        function recalcPrice() {
+            document.getElementById('price-tag').innerText = 'KSh ' + currentSelection.finalPrice.toLocaleString(); 
+        }
+
+        function setSize(size) { 
+            currentSelection.size = size; 
+            recalcPrice();
+            
+            document.querySelectorAll('.size-btn').forEach(b => { 
+                if(parseInt(b.dataset.size) === size) {
+                    b.className = "size-btn border bg-stone-900 border-stone-900 text-white shadow-md py-2.5 md:py-3 rounded-lg text-[10px] md:text-xs font-bold transition-all font-sans";
+                } else {
+                    b.className = "size-btn border bg-[#fafaf9] border-black/5 text-stone-500 hover:bg-stone-100 py-2.5 md:py-3 rounded-lg text-[10px] md:text-xs font-bold transition-all font-sans";
+                }
+            }); 
+        }
+
+        function backFromCart() { showPage('catalog'); }
+
+        function quickAddToCart(id) {
+            const product = products.find(p => p.id === id);
+            currentSelection.product = product;
+            currentSelection.size = product.sizes[0];
+            currentSelection.finalPrice = product.basePrice;
+            addToCart();
+        }
+
+        function addToCart() { 
+            const item = { 
+                cartId: Date.now(), 
+                id: currentSelection.product.id,
+                name: currentSelection.product.name,
+                image: currentSelection.product.image, 
+                size: currentSelection.size, 
+                price: currentSelection.finalPrice,
+                discountPrice: currentSelection.product.discountPrice,
+                qty: 1
+            }; 
+            
+            const existing = cart.find(i => i.id === item.id && i.size === item.size);
+            if(existing) {
+                existing.qty += 1;
+            } else {
+                cart.push(item); 
+            }
+            
+            localStorage.setItem('quickmacc_cart_v5_png', JSON.stringify(cart)); 
+            updateCartUI(); 
+            showToast("Added to Bag"); 
+            
+            const cartIcon = document.getElementById('cart-icon'); 
+            cartIcon.classList.remove('cart-pulse'); 
+            void cartIcon.offsetWidth; 
+            cartIcon.classList.add('cart-pulse'); 
+        }
+
+        function updateCartQty(cartId, change) { 
+            const item = cart.find(item => item.cartId === cartId); 
+            if (!item) return;
+            item.qty += change;
+            if (item.qty <= 0) {
+                cart = cart.filter(i => i.cartId !== cartId);
+            }
+            localStorage.setItem('quickmacc_cart_v5_png', JSON.stringify(cart)); 
+            updateCartUI(); 
+        }
+
+        function removeFromCart(cartId) { 
+            cart = cart.filter(item => item.cartId !== cartId); 
+            localStorage.setItem('quickmacc_cart_v5_png', JSON.stringify(cart)); 
+            updateCartUI(); 
+        }
+
+        function clearCart() { 
+            if(confirm("Clear all items from your bag?")) { 
+                cart = []; 
+                localStorage.setItem('quickmacc_cart_v5_png', JSON.stringify(cart)); 
+                updateCartUI(); 
+            } 
+        }
+
+        function applyPromoCode() {
+            const input = document.getElementById('promo-code-input').value.toUpperCase().trim();
+            const msg = document.getElementById('promo-msg');
+
+            if (input === '') return;
+
+            msg.classList.remove('hidden');
+
+            if (input === '4MACC') {
+                activePromo = true;
+                msg.innerHTML = '<i class="fas fa-check-circle"></i> Code applied! Discounts activated.';
+                msg.className = "text-[10px] font-bold mt-2 text-green-600 block";
+            } else {
+                activePromo = false;
+                msg.innerHTML = '<i class="fas fa-times-circle"></i> Invalid promo code.';
+                msg.className = "text-[10px] font-bold mt-2 text-red-500 block";
+            }
+            
+            updateCartUI();
+        }
+
+        function updateCartUI() { 
+            const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+            const badge = document.getElementById('cart-badge'); 
+            const cartCountHeader = document.getElementById('cart-count-header'); 
+            
+            if (totalQty > 0) { 
+                badge.innerText = totalQty; 
+                badge.classList.add('visible'); 
+            } else { 
+                badge.classList.remove('visible'); 
+            } 
+            
+            if(cartCountHeader) cartCountHeader.innerText = '(' + totalQty + ')'; 
+            
+            const container = document.getElementById('cart-items-container'); 
+            if (container) { 
+                container.innerHTML = ''; 
+                let total = 0; 
+                
+                if(cart.length === 0) { 
+                    container.innerHTML = '<div class="flex flex-col items-center justify-center py-16 md:py-20 text-stone-300"><i class="fas fa-shopping-cart text-4xl md:text-5xl mb-3 md:mb-4"></i><p class="text-[11px] md:text-sm font-bold uppercase tracking-widest font-sans">Your bag is empty</p></div>'; 
+                    document.getElementById('cart-total').innerText = 'KSh 0';
+                    activePromo = false;
+                    const msg = document.getElementById('promo-msg');
+                    if(msg) msg.classList.add('hidden');
+                    const promoInput = document.getElementById('promo-code-input');
+                    if(promoInput) promoInput.value = '';
+                } else { 
+                    cart.forEach(item => { 
+                        let itemPrice = item.price;
+                        let extraTags = "";
+                        
+                        if (activePromo && item.discountPrice) {
+                            itemPrice = item.discountPrice;
+                            extraTags = `<div class="text-[9px] text-green-600 font-bold mt-1 bg-green-50 px-2 py-0.5 rounded w-fit border border-green-200 uppercase"><i class="fas fa-tag"></i> Discounted</div>`;
+                        }
+                        
+                        total += (itemPrice * item.qty); 
+                        
+                        container.innerHTML += `
+                        <div class="bg-white p-3 md:p-4 rounded-2xl flex items-center justify-between relative shadow-sm border border-black/5">
+                            <div class="flex items-center gap-3 md:gap-4 w-full pr-6 md:pr-8">
+                                <div class="w-14 h-14 md:w-16 md:h-16 bg-[#f5f5f4] rounded-xl flex items-center justify-center p-2 shrink-0 border border-black/5">
+                                    <img src="${item.image}" class="max-h-full object-contain filter drop-shadow-md">
+                                </div>
+                                <div class="flex-1">
+                                    <h4 class="font-display font-black text-[11px] md:text-sm text-stone-900 leading-tight mb-1 uppercase">${item.name}</h4>
+                                    <p class="text-[9px] md:text-[10px] text-stone-500 font-sans font-bold mb-1">Size: SZ ${item.size}</p>
+                                    
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <p class="text-[11px] md:text-xs font-sans font-black text-stone-900">KSh ${itemPrice.toLocaleString()}</p>
+                                        ${(activePromo && item.discountPrice) ? `<p class="text-[9px] text-stone-400 line-through font-bold mt-0.5">KSh ${item.price.toLocaleString()}</p>` : ''}
+                                    </div>
+                                    ${extraTags}
+
+                                    <div class="flex items-center gap-1.5 md:gap-3 bg-[#fafaf9] w-fit rounded-lg px-2 py-1 mt-2 border border-black/5">
+                                        <button onclick="updateCartQty(${item.cartId}, -1)" class="w-5 h-5 flex items-center justify-center text-stone-500 hover:text-stone-900"><i class="fas fa-minus text-[8px]"></i></button>
+                                        <span class="text-[9px] md:text-xs font-bold w-3 md:w-4 text-center text-stone-900 font-sans">${item.qty}</span>
+                                        <button onclick="updateCartQty(${item.cartId}, 1)" class="w-5 h-5 flex items-center justify-center text-stone-500 hover:text-stone-900"><i class="fas fa-plus text-[8px]"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <button onclick="removeFromCart(${item.cartId}); event.stopPropagation();" class="absolute top-2 right-2 w-8 h-8 rounded-full bg-red-50 text-red-500 flex items-center justify-center hover:bg-red-100 transition-colors z-20 cursor-pointer">
+                                <i class="fas fa-times text-[10px]"></i>
+                            </button>
+                        </div>`; 
+                    }); 
+                    document.getElementById('cart-total').innerText = 'KSh ' + total.toLocaleString(); 
+                } 
+            } 
+        }
+
+        function openCart() { showPage('cart-page'); }
+
+        function buyNow() { 
+            const p = currentSelection.product; 
+            let msg = '🔥 *QUICKMACC STORE: QUICK ORDER*\n\n';
+            msg += `*Sneaker:* ${p.name}\n*Size:* SZ ${currentSelection.size}\n`; 
+            if (activePromo) msg += `*Promo:* 🎁 4MACC Applied\n`;
+            
+            let finalP = activePromo && p.discountPrice ? p.discountPrice : currentSelection.finalPrice;
+            msg += `*Price:* KSh ${finalP.toLocaleString()}`; 
+            
+            window.open('https://wa.me/254797041522?text=' + encodeURIComponent(msg), '_blank'); 
+        }
+
+        function checkoutCart() { 
+            if(cart.length === 0) return showToast("Cart is empty!"); 
+
+            let total = 0; 
+            let msg = '🔥 *QUICKMACC STORE: NEW ORDER*\n\n'; 
+            cart.forEach((item) => { 
+                let itemPrice = item.price;
+                let promoText = "";
+                
+                if (activePromo && item.discountPrice) {
+                    itemPrice = item.discountPrice;
+                    promoText = "\n   🎁 _Code Applied_";
+                }
+                
+                total += (itemPrice * item.qty); 
+                msg += `▪️ ${item.qty}x ${item.name}\n   Size: SZ ${item.size}${promoText}\n`;
+                msg += `   = KSh ${(itemPrice * item.qty).toLocaleString()}\n\n`; 
+            }); 
+            
+            msg += `💰 *TOTAL TO PAY: KSh ${total.toLocaleString()}*`; 
+            
+            window.open('https://wa.me/254797041522?text=' + encodeURIComponent(msg), '_blank'); 
+        }
+
+        function showToast(message) { 
+            const toast = document.getElementById('toast'); 
+            document.getElementById('toast-msg').innerText = message; 
+            toast.classList.add('show'); 
+            setTimeout(() => { toast.classList.remove('show'); }, 2500); 
+        }
+    </script>
+</body>
+</html>
